@@ -42,7 +42,7 @@ const handleDirectory = async () => {
                 key: 'videoList',
                 data: videoFiles,
               });
-            console.log(videoFiles);
+            console.log("Directory changed ");
         }
         } catch (err) {
           if (DocumentPicker.isCancel(err)) {

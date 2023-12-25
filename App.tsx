@@ -53,6 +53,7 @@ function App(): React.JSX.Element {
   ]
   return (
     <SafeAreaView style={styles.container}>
+       <StatusBar hidden={true} />
       {/* <DirectoryPickerComp  setDirName={setDirName}/> */}
       <FlatList
         style={{flex:1,backgroundColor:'black'}}

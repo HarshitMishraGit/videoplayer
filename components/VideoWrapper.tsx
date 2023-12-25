@@ -1,4 +1,4 @@
-import { View, Text,Dimensions } from 'react-native'
+import { View, Text,Dimensions,StyleSheet } from 'react-native'
 import React,{useState} from 'react'
 import VideoPlayer from 'react-native-video-player';
 import DirectoryPickerComp from './DirectoryPickerComp';
@@ -19,7 +19,23 @@ export default function VideoWrapper(props: any) {
               fullScreenOnLongPress={true}
           />
           
-     
+          <View style={styles.float}>
+      <Text style={{ color: 'red' }}>{uri.name}</Text>
+    </View>
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+    float: {
+        position: 'absolute',
+        bottom: 10,
+        left: 0,
+        margin: 30,
+       
+        borderRadius: 30,
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex:10
+    }
+})
