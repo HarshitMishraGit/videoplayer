@@ -1,28 +1,26 @@
-import { View, Text ,StyleSheet, Button} from 'react-native'
+import { View, Text ,StyleSheet, Button,TouchableOpacity} from 'react-native'
 import React, { useEffect, useState } from 'react'
 import DocumentPicker from 'react-native-document-picker';  
 import storage from '../storage/storage';
 import * as RNFS from 'react-native-fs';
+import Icon from 'react-native-vector-icons/FontAwesome';
 export default function DirectoryPickerComp(props:any) {
-    const { setDirName } = props;
-    const [dir, setdir] = useState("")
+    const { setVideoList ,setDirName } = props;
+    const [dir,setdir] = useState<string>('');
     storage.load({
         key: 'dirName',
     }).then(res => {
-        console.log("res: ", res);
+        // console.log("res: ", res);
         setdir(res);
     }).catch(err => {
-        console.log("err: ", err);
+        // console.log("err: ", err);
     })
 
+    
 
-    const handleDirectory = async () => {
+const handleDirectory = async () => {
         try {
             const res = await DocumentPicker.pickDirectory();
-        //   console.log(
-        //     res
-        //     );
-            setDirName(res?.uri);
             // res.uri = content://com.android.externalstorage.documents/tree/777B-D380%3A.cache%2FMy%20Space
             // absolute path = /storage/777B-D380/.cache/My Space
             // %3A = : so replace it with %2F = / to get the absolute path
@@ -36,9 +34,14 @@ export default function DirectoryPickerComp(props:any) {
             // Filter to only include video files
             const videoFiles = files.filter(file => {
             const fileExtension = file.name.split('.').pop();
-            return ['mp4', 'avi', 'mov', 'mkv'].includes(fileExtension ?? '');
+            return ['mp4', 'avi', 'mov', 'mkv','ts'].includes(fileExtension ?? '');
             });
-
+              setVideoList(videoFiles);
+              // save it inside storage
+              storage.save({
+                key: 'videoList',
+                data: videoFiles,
+              });
             console.log(videoFiles);
         }
         } catch (err) {
@@ -50,16 +53,24 @@ export default function DirectoryPickerComp(props:any) {
         }
       }
   return (
-    <View>
-          <Text style={styles.text}>DirectoryPickerComp</Text>
-          <Button title="Click me" onPress={handleDirectory} />
-          <Text style={styles.text}>dir : { dir}</Text>
+    <View style={styles.floatingContainer}>
+      
+      <TouchableOpacity onPress={handleDirectory}  >
+        <Text style={{fontSize:20}}>. . .</Text>
+     </TouchableOpacity>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-    text: {
-        color:'black',
-    }
+
+    floatingContainer: {
+      position: 'absolute',
+      top: 10,
+      right: 10,
+      padding: 10,
+     borderRadius: 5,
+      zIndex:10
+    },
+  
 })
