@@ -36,14 +36,16 @@ export default function VideoWrapper(props: any) {
             data: videoResizeMode === 'contain' ? 'cover' : 'contain',
         })
     };
-    
+  
+      
     const randomVideo = async () => {
         const videoList = await storage.load({
             key: 'videoList',
         });
         const randomVideo = videoList[Math.floor(Math.random() * videoList.length)];
         setvideopath(randomVideo.path);
-        
+        // also while changing the video shuffle the videoList
+    
     }
   return (
       <View style={{ width: width }}>

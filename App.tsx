@@ -27,7 +27,10 @@ function App(): React.JSX.Element {
         key: 'videoList',
       }).then(res => {
         // console.log("res: ", res);
-        setVideoList(res);
+        // shuffle the videoList
+        const shuffledVideoList = res.sort(() => Math.random() - 0.5);
+        setVideoList(shuffledVideoList);
+        // setVideoList(res);
       }).catch(err => {
         // console.log("err: ", err);
       })
