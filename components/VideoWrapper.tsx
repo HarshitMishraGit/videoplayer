@@ -7,7 +7,7 @@ import { TapGestureHandler, State, GestureHandlerRootView,PinchGestureHandler } 
 export default function VideoWrapper(props: any) {
     const { uri,setVideoList,setDirName } = props;
     const { width, height } = Dimensions.get('window');
-    const [showControls, setShowControls] = useState<boolean>(false);
+    const [videopath, setvideopath] = useState<string>(uri.path);
     const [videoResizeMode, setVideoResizeMode] = useState<'contain' | 'cover'>('contain');
     const videoPlayerRef = useRef<VideoPlayer>(null);
     // console.log("uri",uri)
@@ -35,11 +35,20 @@ export default function VideoWrapper(props: any) {
             key: 'resizeMode',
             data: videoResizeMode === 'contain' ? 'cover' : 'contain',
         })
-      };
+    };
+    
+    const randomVideo = async () => {
+        const videoList = await storage.load({
+            key: 'videoList',
+        });
+        const randomVideo = videoList[Math.floor(Math.random() * videoList.length)];
+        setvideopath(randomVideo.path);
+        
+    }
   return (
       <View style={{ width: width }}>
           {/* <GestureHandlerRootView style={{ flex: 1 }}> */}
-              <DirectoryPickerComp setVideoList={setVideoList} setDirName={setDirName} />
+              <DirectoryPickerComp setVideoList={setVideoList} randomVideo={randomVideo} />
               {/* <TapGestureHandler
       numberOfTaps={2}
       onHandlerStateChange={onDoubleTap}
@@ -48,7 +57,7 @@ export default function VideoWrapper(props: any) {
                   <View>
  <VideoPlayer 
            ref={videoPlayerRef}
-            video={{ uri: 'file://' + uri.path }}
+            video={{ uri: 'file://' + videopath}}
             videoWidth={width}
             videoHeight={height}
             //   autoplay={true}
@@ -61,7 +70,12 @@ export default function VideoWrapper(props: any) {
           <View style={styles.float}>
       <Text style={{ color: 'red' }}>{uri.name} </Text>
                       </View>
-          <View style={styles.resize}>
+              <View style={styles.resize}>
+                  
+                          <TouchableOpacity onPress={randomVideo}>
+                              <Text style={{fontSize:28}}>🔃</Text>
+                              </TouchableOpacity>
+                  
                           <TouchableOpacity onPress={resizeModeToggler}>
                               <Text style={{fontSize:28}}>🔳</Text>
                               </TouchableOpacity>
@@ -90,8 +104,8 @@ const styles = StyleSheet.create({
         bottom: 20,
         right: 0,
         margin: 25,
-       
-        alignItems: 'center',
+         gap:10,
+          alignItems: 'center',
         justifyContent: 'center',
         zIndex:10
     }

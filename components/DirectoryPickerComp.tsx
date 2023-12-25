@@ -5,7 +5,7 @@ import storage from '../storage/storage';
 import * as RNFS from 'react-native-fs';
 import Icon from 'react-native-vector-icons/FontAwesome';
 export default function DirectoryPickerComp(props:any) {
-    const { setVideoList ,setDirName } = props;
+    const { setVideoList  } = props;
     const [dir,setdir] = useState<string>('');
     storage.load({
         key: 'dirName',
@@ -51,12 +51,13 @@ const handleDirectory = async () => {
             throw err;
           }
         }
-      }
+  }
+
   return (
     <View style={styles.floatingContainer}>
-      
+  
       <TouchableOpacity onPress={handleDirectory}  >
-        <Text style={{fontSize:20,color:'gray'}}>. . .</Text>
+        <Text style={{fontSize:25,color:'gray'}}>📂</Text>
      </TouchableOpacity>
     </View>
   )
@@ -65,7 +66,12 @@ const handleDirectory = async () => {
 const styles = StyleSheet.create({
 
     floatingContainer: {
-      position: 'absolute',
+    position: 'absolute',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+      gap: 10,
       top: 10,
       right: 10,
       padding: 10,
