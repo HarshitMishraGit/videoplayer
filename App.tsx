@@ -1,6 +1,5 @@
 import React,{useState,useEffect} from 'react';
 import type { PropsWithChildren } from 'react';
-
 import {
   SafeAreaView,
   ScrollView,
@@ -17,15 +16,17 @@ import DirectoryPickerComp from './components/DirectoryPickerComp';
 import storage from './storage/storage';
 function App(): React.JSX.Element {
   const [dirName, setDirName] = useState("");
-  useEffect(() => {
-    console.log("DirName: ", dirName)
-    if (dirName && storage) {
-      storage.save({
-        key: 'dirName',  // Note: Do not use underscore("_") in key!
-        data: dirName,
-      });
-    }
-  }, [dirName,storage])
+
+  
+  // useEffect(() => {
+  //   console.log("DirName: ", dirName)
+  //   if (dirName && storage) {
+  //     storage.save({
+  //       key: 'dirName',  // Note: Do not use underscore("_") in key!
+  //       data: dirName,
+  //     });
+  //   }
+  // }, [dirName,storage])
   
   return (
     <SafeAreaView style={styles.container}>
@@ -51,3 +52,4 @@ const styles = StyleSheet.create({
 });
 
 export default App;
+
