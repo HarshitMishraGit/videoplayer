@@ -56,7 +56,7 @@ const handleDirectory = async () => {
     <View style={styles.floatingContainer}>
       
       <TouchableOpacity onPress={handleDirectory}  >
-        <Text style={{fontSize:20}}>. . .</Text>
+        <Text style={{fontSize:20,color:'gray'}}>. . .</Text>
      </TouchableOpacity>
     </View>
   )
