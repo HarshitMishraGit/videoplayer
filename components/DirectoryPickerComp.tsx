@@ -30,7 +30,7 @@ const handleDirectory = async () => {
                 let dirToRead = res?.uri.split('tree')[1];   
                 dirToRead = '/storage' + dirToRead.replace(/%3A/g, '%2F');
                 const files = await RNFS.readDir(decodeURIComponent(dirToRead));              
-                
+                console.log(decodeURIComponent(dirToRead))
             // Filter to only include video files
             const videoFiles = files.filter(file => {
             const fileExtension = file.name.split('.').pop();
@@ -42,7 +42,7 @@ const handleDirectory = async () => {
                 key: 'videoList',
                 data: videoFiles,
               });
-            console.log("Directory changed ");
+            console.log("Directory changed ",videoFiles);
         }
         } catch (err) {
           if (DocumentPicker.isCancel(err)) {

@@ -10,15 +10,20 @@ import {
   View,
   Button,
   FlatList,
+  PermissionsAndroid
   // Added Button component
 } from 'react-native';
+import { IOScrollView, InView } from 'react-native-intersection-observer'
 import DirectoryPickerComp from './components/DirectoryPickerComp';
 import storage from './storage/storage';
 import VideoWrapper from './components/VideoWrapper';
+import { askForFilesAndMediaPermission } from './components/permissionsHelper';
 function App(): React.JSX.Element {
-
   const [videoList, setVideoList] = useState<string[]>([]);
   const [dirName, setDirName] = useState<string>('');
+  useEffect(() => {
+    askForFilesAndMediaPermission();
+  }, []);
 
   useEffect(() => {
     console.log("DirName: ", dirName)
@@ -37,20 +42,25 @@ function App(): React.JSX.Element {
     }
   }, [storage])
   
-  return (
-    <View style={styles.container}>
+  return (<>
        <StatusBar hidden={true} />
-   {videoList.length ===0 &&   <DirectoryPickerComp setVideoList={setVideoList } />}
+    <View style={styles.container}>
+      {videoList.length === 0 && <DirectoryPickerComp setVideoList={setVideoList} />}
       <FlatList
         style={{flex:1,backgroundColor:'black'}}
         data={Array.from(videoList, path => ({ path }))}
         contentContainerStyle={{ width: '100%' }}
-        renderItem={({ item }: { item: { path: string } }) => <VideoWrapper uri={item?.path} setDirName={setDirName} setVideoList={setVideoList} />}
+        renderItem={({ item }: { item: { path: string } }) => (
+          <InView onChange={(inView: boolean) => console.log('Inview:', inView)}>
+            <VideoWrapper uri={item?.path} setDirName={setDirName} setVideoList={setVideoList} />
+          </InView>
+        )}
         snapToAlignment='start'
         snapToInterval={0}
         decelerationRate={'fast'}
-      />
+        />
     </View>
+    </>
   );
 }
 
@@ -60,6 +70,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+   
   },
   text: {
     color:'black',
