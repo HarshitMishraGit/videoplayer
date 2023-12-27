@@ -1,6 +1,7 @@
 import { View, Text ,StyleSheet, Button,TouchableOpacity} from 'react-native'
 import React, { useEffect, useState } from 'react'
 import DocumentPicker from 'react-native-document-picker';  
+import RNFetchBlob from 'rn-fetch-blob';
 import storage from '../storage/storage';
 import * as RNFS from 'react-native-fs';
 import FloatingMenu from './FloatingMenu';
@@ -17,35 +18,63 @@ export default function DirectoryPickerComp(props:any) {
         // console.log("err: ", err);
     })
 
-
+  const  convertExternalStoragePathToAbsolutePath  = (path: string) => {
+    let dirToRead = path.split('tree')[1];   
+    dirToRead = '/storage' + dirToRead.replace(/%3A/g, '%2F');
+    // console.log("prePath:",path ,"cov: ",dirToRead)
+    return decodeURIComponent(dirToRead);
+  }
+  const convertInternalStoragePathToAbsolutePath =  (path: string) => {
+    let dirToRead = path?.split('primary')[1];   
+    const InternalStoragePath =  RNFS.ExternalStorageDirectoryPath;
+    dirToRead = InternalStoragePath + dirToRead.replace(/%3A/g, '%2F');
+    console.log("prePath:",path ,"cov: ",decodeURIComponent(dirToRead))
+    return decodeURIComponent(dirToRead);
+  }
+  const searchFiles = async (path: string) => { 
+    const files = await RNFS.readDir(path);     
+    const videoFiles = files.filter(file => {
+      const fileExtension = file.name.split('.').pop();
+      return ['mp4', 'avi', 'mov', 'mkv','ts'].includes(fileExtension ?? '');
+      });
+      setVideoList(videoFiles);
+        // save it inside storage
+        storage.save({
+          key: 'videoList',
+          data: videoFiles,
+        }).then(() => {
+          console.log("videoList saved successfully");
+          RNRestart.restart();
+        })
+      console.log("Directory changed ");
+  }
 const handleDirectory = async () => {
         try {
-            const res = await DocumentPicker.pickDirectory();
+          const res = await DocumentPicker.pickDirectory();
+          const test = await RNFS.ExternalStorageDirectoryPath;
+          console.log("test : ", test)
+          const isInternalStorage = res?.uri.startsWith('content://com.android.externalstorage.documents/tree/primary');
+          const isSdCardStorage = res?.uri.startsWith('content://com.android.externalstorage.documents/tree/') && !isInternalStorage;
+
             // res.uri = content://com.android.externalstorage.documents/tree/777B-D380%3A.cache%2FMy%20Space
             // absolute path = /storage/777B-D380/.cache/My Space
             // %3A = : so replace it with %2F = / to get the absolute path
-                  // Read the directory
+          // Read the directory
+   
             if (res?.uri) {
-                // check if the directory exists
-                let dirToRead = res?.uri.split('tree')[1];   
-                dirToRead = '/storage' + dirToRead.replace(/%3A/g, '%2F');
-                const files = await RNFS.readDir(decodeURIComponent(dirToRead));              
-                console.log(decodeURIComponent(dirToRead))
+             
+              if (isInternalStorage) {
+                const path = convertInternalStoragePathToAbsolutePath(res?.uri ?? '');
+                console.log("Converted Path: ",path)
+                searchFiles(path);            
+              } else {
+                const absolutePath = await convertExternalStoragePathToAbsolutePath(res?.uri ?? '');
+                console.log("Converted Path: ",absolutePath)
+                searchFiles(absolutePath);
+              }
+                // console.log(decodeURIComponent(dirToRead))
             // Filter to only include video files
-            const videoFiles = files.filter(file => {
-            const fileExtension = file.name.split('.').pop();
-            return ['mp4', 'avi', 'mov', 'mkv','ts'].includes(fileExtension ?? '');
-            });
-            setVideoList(videoFiles);
-              // save it inside storage
-              storage.save({
-                key: 'videoList',
-                data: videoFiles,
-              }).then(() => {
-                console.log("videoList saved successfully");
-                RNRestart.restart();
-              })
-            console.log("Directory changed ");
+          
         }
         } catch (err) {
           if (DocumentPicker.isCancel(err)) {

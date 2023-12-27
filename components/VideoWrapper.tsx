@@ -76,7 +76,7 @@ import FloatingMenu from './FloatingMenu';
     
     }
   return (
-      <View style={{ width: width }} ref={VideoWrapperRef}>
+      <View style={{ width: width ,height:height}} ref={VideoWrapperRef}>
           <GestureHandlerRootView style={{ flex: 1 }}>
               <DirectoryPickerComp setVideoList={setVideoList} randomVideo={randomVideo} resizeModeToggler={resizeModeToggler} videoRef={videoPlayerRef} videMovementStep={videMovementStep} setVideMovementStep={setVideMovementStep} setShow={setShow} show={show } />
               <TapGestureHandler
@@ -93,7 +93,7 @@ import FloatingMenu from './FloatingMenu';
               pauseOnPress={true}
               fullScreenOnLongPress={true}
                           resizeMode={videoResizeMode}
-                          fullscreen={true}
+                        //   fullscreen={true}
                           autoplay={playing}
                           onEnd={() => {
                               videoPlayerRef?.current?.seek(0);
