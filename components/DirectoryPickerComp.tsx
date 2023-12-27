@@ -4,6 +4,7 @@ import DocumentPicker from 'react-native-document-picker';
 import storage from '../storage/storage';
 import * as RNFS from 'react-native-fs';
 import FloatingMenu from './FloatingMenu';
+import RNRestart from 'react-native-restart'; 
 export default function DirectoryPickerComp(props:any) {
     const { setVideoList ,randomVideo ,resizeModeToggler ,show,videoPlayerRef, videMovementStep, setVideMovementStep,setShow } = props;
   const [dir, setdir] = useState<string>('');
@@ -35,12 +36,15 @@ const handleDirectory = async () => {
             const fileExtension = file.name.split('.').pop();
             return ['mp4', 'avi', 'mov', 'mkv','ts'].includes(fileExtension ?? '');
             });
-              setVideoList(videoFiles);
+            setVideoList(videoFiles);
               // save it inside storage
               storage.save({
                 key: 'videoList',
                 data: videoFiles,
-              });
+              }).then(() => {
+                console.log("videoList saved successfully");
+                RNRestart.restart();
+              })
             console.log("Directory changed ");
         }
         } catch (err) {

@@ -122,7 +122,7 @@ import FloatingMenu from './FloatingMenu';
   )
 }
 
-export default React.memo(VideoWrapper)
+export default VideoWrapper
 const styles = StyleSheet.create({
     float: {
         position: 'absolute',
