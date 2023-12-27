@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import React, { useState } from 'react';
 
 export default function FloatingMenu(props: any) {
-  const { videoRef,videMovementStep,setVideMovementStep } = props;
+  const { videoRef,videMovementStep,setVideMovementStep,setShow,show } = props;
 
   const [menuVisible, setMenuVisible] = useState(false);
 
@@ -16,10 +16,10 @@ export default function FloatingMenu(props: any) {
     setVideMovementStep(options[newIndex]);
 
   }
-  // const handleLoop = () => {
-  //   //  make loop true
-  //   videoRef?.current?.setLoop(!videoRef?.current?.props.loop);
-  // }
+  const handleShow = () => {
+    //  make loop true
+    setShow((e: boolean) => !e);
+  }
   return (<>
       <TouchableOpacity onPress={toggleMenu} >
         <Text style={{fontSize:28}}>💿</Text>
@@ -30,9 +30,9 @@ export default function FloatingMenu(props: any) {
         <TouchableOpacity onPress={handleMovementStep}>
               <Text style={{ fontSize: 20 }}>{ videMovementStep} <Text  style={{ fontSize: 10 }}>sec</Text></Text>
         </TouchableOpacity>
-        {/* <TouchableOpacity onPress={handleLoop}>
-            <Text style={{ fontSize: 20 }}>{ videoRef?.current?.props.loop== true?'🔁':'🔴'}</Text>
-        </TouchableOpacity> */}
+          <TouchableOpacity onPress={handleShow}>
+            <Text style={{ fontSize: 20 }}>{ show== true?'⬇️':'⬆️'}</Text>
+        </TouchableOpacity>
      
         </View>
       )}
@@ -46,14 +46,14 @@ const styles = StyleSheet.create({
   menuContainer: {
     position: 'absolute',
     display: 'flex',
-    flexDirection: 'column',
+    flexDirection: 'row',
     gap: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    bottom: 0,
-    right: -30,
-    width: 50,
-    height: 100,
+    bottom:-40,
+    right: 30,
+    width: 100,
+    height: 50,
     marginBottom: 50,
     backgroundColor: 'gray',
   },

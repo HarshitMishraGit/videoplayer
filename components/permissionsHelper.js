@@ -10,16 +10,6 @@ export async function askForFilesAndMediaPermission() {
     } else {
       console.log('Files and media permissions denied');
     }
-
-    // If the Android version is 11 (R) or higher, ask for the MANAGE_EXTERNAL_STORAGE permission
-    if (Platform.OS === 'android') {
-      const packageName = 'com.videoplayer'; // Replace with your actual package name
-      const uri = `package:${packageName}`;
-      const canOpen = await Linking.canOpenURL(uri);
-      if (canOpen) {
-        await Linking.openURL(uri);
-      }
-    }
   } catch (error) {
     console.error('Error while asking for files and media permissions:', error);
   }

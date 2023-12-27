@@ -1,18 +1,20 @@
-import { View, Text,Dimensions,StyleSheet ,TouchableOpacity} from 'react-native'
+import { View, Text,Dimensions,StyleSheet ,TouchableOpacity,LayoutRectangle} from 'react-native'
 import React,{useState,useRef,useEffect} from 'react'
 import VideoPlayer from 'react-native-video-player';
 import DirectoryPickerComp from './DirectoryPickerComp';
 import storage from '../storage/storage';
 import { TapGestureHandler, State, GestureHandlerRootView,PinchGestureHandler } from 'react-native-gesture-handler';
 import FloatingMenu from './FloatingMenu';
-export default function VideoWrapper(props: any) {
-    const { uri,setVideoList,setDirName } = props;
+ function VideoWrapper(props: any) {
+    const { uri,setVideoList,index,visible,playing,paused } = props;
     const { width, height } = Dimensions.get('window');
     const [videopath, setvideopath] = useState<string>(uri.path);
     const [videoName, setVideoName] = useState(uri.name)
-    const [videMovementStep, setVideMovementStep] = useState(10)
+     const [videMovementStep, setVideMovementStep] = useState(5)
+     const [show, setShow] = useState(false)
     const [videoResizeMode, setVideoResizeMode] = useState<'contain' | 'cover'>('contain');
     const videoPlayerRef = useRef<VideoPlayer>(null);
+    const VideoWrapperRef = useRef<any>(null);
     // console.log("uri",uri)
   const onDoubleTap = (event:any) => {
       if (event.nativeEvent.state === State.ACTIVE) {
@@ -20,9 +22,15 @@ export default function VideoWrapper(props: any) {
           const progress = videoPlayerRef?.current?.state.progress;
           if (!duration || !progress)
               return;
-        const currentTime = (duration ?? 0) * (progress ?? 0);
-          console.log(currentTime);
-        videoPlayerRef?.current?.seek(currentTime + videMovementStep); // Seek 10 seconds backward
+        let currentTime = (duration ?? 0) * (progress ?? 0);
+            // console.log(currentTime);
+          if (currentTime === duration) {
+                videoPlayerRef?.current?.seek(0);
+            
+          } else {
+              
+              videoPlayerRef?.current?.seek(currentTime + videMovementStep); // Seek 10 seconds backward
+        }
     // videoPlayerRef?.current?.seek(videoPlayerRef?.current?.state.currentTime + 10); // Seek 10 seconds forward
     }
     };
@@ -68,9 +76,9 @@ export default function VideoWrapper(props: any) {
     
     }
   return (
-      <View style={{ width: width }}>
+      <View style={{ width: width }} ref={VideoWrapperRef}>
           <GestureHandlerRootView style={{ flex: 1 }}>
-              <DirectoryPickerComp setVideoList={setVideoList} randomVideo={randomVideo} />
+              <DirectoryPickerComp setVideoList={setVideoList} randomVideo={randomVideo} resizeModeToggler={resizeModeToggler} videoRef={videoPlayerRef} videMovementStep={videMovementStep} setVideMovementStep={setVideMovementStep} setShow={setShow} show={show } />
               <TapGestureHandler
       numberOfTaps={2}
       onHandlerStateChange={onDoubleTap}
@@ -82,20 +90,21 @@ export default function VideoWrapper(props: any) {
             video={{ uri: 'file://' + videopath}}
             videoWidth={width}
             videoHeight={height}
-            //   autoplay={true}
               pauseOnPress={true}
               fullScreenOnLongPress={true}
-              resizeMode={videoResizeMode}
-                        
-                      
-                        
+                          resizeMode={videoResizeMode}
+                          fullscreen={true}
+                          autoplay={playing}
+                          onEnd={() => {
+                              videoPlayerRef?.current?.seek(0);
+                          }}
           />
           
           <View style={styles.float}>
       <Text style={{ color: 'red' }}>{videoName} </Text>
                       </View>
-              <View style={styles.resize}>
-                  <FloatingMenu videoRef={videoPlayerRef} videMovementStep={videMovementStep} setVideMovementStep={setVideMovementStep}/>
+              {!show && <View style={styles.resize}>
+                          <FloatingMenu videoRef={videoPlayerRef} videMovementStep={videMovementStep} setVideMovementStep={setVideMovementStep} setShow={setShow} show={ show} />
                           <TouchableOpacity onPress={randomVideo}>
                               <Text style={{fontSize:28}}>🔃</Text>
                               </TouchableOpacity>
@@ -104,7 +113,7 @@ export default function VideoWrapper(props: any) {
                               <Text style={{fontSize:28}}>🔳</Text>
                               </TouchableOpacity>
 
-                      </View>
+                      </View>}
                       </View>
                       </TapGestureHandler>
                  
@@ -113,6 +122,7 @@ export default function VideoWrapper(props: any) {
   )
 }
 
+export default React.memo(VideoWrapper)
 const styles = StyleSheet.create({
     float: {
         position: 'absolute',
@@ -133,6 +143,7 @@ const styles = StyleSheet.create({
          gap:10,
           alignItems: 'center',
         justifyContent: 'center',
-        zIndex:10
+        zIndex: 10,
+        opacity:0.5
     }
 })

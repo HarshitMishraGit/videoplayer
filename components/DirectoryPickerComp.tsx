@@ -3,10 +3,10 @@ import React, { useEffect, useState } from 'react'
 import DocumentPicker from 'react-native-document-picker';  
 import storage from '../storage/storage';
 import * as RNFS from 'react-native-fs';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import FloatingMenu from './FloatingMenu';
 export default function DirectoryPickerComp(props:any) {
-    const { setVideoList  } = props;
-    const [dir,setdir] = useState<string>('');
+    const { setVideoList ,randomVideo ,resizeModeToggler ,show,videoPlayerRef, videMovementStep, setVideMovementStep,setShow } = props;
+  const [dir, setdir] = useState<string>('');
     storage.load({
         key: 'dirName',
     }).then(res => {
@@ -16,7 +16,6 @@ export default function DirectoryPickerComp(props:any) {
         // console.log("err: ", err);
     })
 
-    
 
 const handleDirectory = async () => {
         try {
@@ -42,7 +41,7 @@ const handleDirectory = async () => {
                 key: 'videoList',
                 data: videoFiles,
               });
-            console.log("Directory changed ",videoFiles);
+            console.log("Directory changed ");
         }
         } catch (err) {
           if (DocumentPicker.isCancel(err)) {
@@ -58,8 +57,19 @@ const handleDirectory = async () => {
   
       <TouchableOpacity onPress={handleDirectory}  >
         <Text style={{fontSize:25,color:'gray'}}>📂</Text>
-     </TouchableOpacity>
-    </View>
+      </TouchableOpacity>
+        {show && <View style={styles.resize}>
+        <FloatingMenu videoRef={videoPlayerRef} videMovementStep={videMovementStep} setVideMovementStep={setVideMovementStep} setShow={setShow} show={show} />
+                 <TouchableOpacity onPress={randomVideo}>
+                     <Text style={{fontSize:28}}>🔃</Text>
+                     </TouchableOpacity>
+         
+                 <TouchableOpacity onPress={resizeModeToggler}>
+                     <Text style={{fontSize:28}}>🔳</Text>
+                     </TouchableOpacity>
+
+             </View>}
+      </View>
   )
 }
 
@@ -68,15 +78,24 @@ const styles = StyleSheet.create({
     floatingContainer: {
     position: 'absolute',
     display: 'flex',
-    flexDirection: 'row',
+    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
       gap: 10,
       top: 10,
       right: 10,
-      padding: 10,
      borderRadius: 5,
-      zIndex:10
-    },
+    zIndex: 10,
+      opacity:0.5
+  },
+  resize: {
+    right: 0,
+     gap:10,
+    alignItems: 'center',
+    justifyContent: 'center',
+ 
+    zIndex: 10,
+    opacity:0.5
+}
   
 })
