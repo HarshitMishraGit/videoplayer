@@ -119,7 +119,8 @@ const styles = StyleSheet.create({
       right: 10,
      borderRadius: 5,
     zIndex: 10,
-      opacity:0.5
+    opacity: 0.5,
+    paddingTop: 20,
   },
   resize: {
     right: 0,

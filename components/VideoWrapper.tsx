@@ -1,4 +1,4 @@
-import { View, Text,Dimensions,StyleSheet ,TouchableOpacity,LayoutRectangle} from 'react-native'
+import { View, Text,Dimensions,StyleSheet ,TouchableOpacity,LayoutRectangle,Platform,StatusBar} from 'react-native'
 import React,{useState,useRef,useEffect} from 'react'
 import VideoPlayer from 'react-native-video-player';
 import DirectoryPickerComp from './DirectoryPickerComp';
@@ -14,7 +14,9 @@ import FloatingMenu from './FloatingMenu';
      const [show, setShow] = useState(false)
     const [videoResizeMode, setVideoResizeMode] = useState<'contain' | 'cover'>('contain');
     const videoPlayerRef = useRef<VideoPlayer>(null);
-    const VideoWrapperRef = useRef<any>(null);
+     const VideoWrapperRef = useRef<any>(null);
+     const heightStatus = Platform.OS === 'android' ? StatusBar.currentHeight : 0;
+     
     // console.log("uri",uri)
   const onDoubleTap = (event:any) => {
       if (event.nativeEvent.state === State.ACTIVE) {
@@ -76,7 +78,7 @@ import FloatingMenu from './FloatingMenu';
     
     }
   return (
-      <View style={{ width: width ,height:height}} ref={VideoWrapperRef}>
+    <View style={{ width: width ,height:height+(heightStatus ?? 0)}} ref={VideoWrapperRef}>
           <GestureHandlerRootView style={{ flex: 1 }}>
               <DirectoryPickerComp setVideoList={setVideoList} randomVideo={randomVideo} resizeModeToggler={resizeModeToggler} videoRef={videoPlayerRef} videMovementStep={videMovementStep} setVideMovementStep={setVideMovementStep} setShow={setShow} show={show } />
               <TapGestureHandler
@@ -89,7 +91,7 @@ import FloatingMenu from './FloatingMenu';
            ref={videoPlayerRef}
             video={{ uri: 'file://' + videopath}}
             videoWidth={width}
-            videoHeight={height}
+            videoHeight={height+(heightStatus ?? 0)}
               pauseOnPress={true}
               fullScreenOnLongPress={true}
                           resizeMode={videoResizeMode}

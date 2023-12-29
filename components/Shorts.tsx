@@ -62,7 +62,7 @@ export default function Shorts(props:any) {
     });
   
     return (<>
-         {/* <StatusBar hidden={true} /> */}
+        <StatusBar translucent backgroundColor="transparent" />
       <View style={styles.container}  onLayout={(e: LayoutChangeEvent) => {
           setLayout(e.nativeEvent.layout);
         }}>
