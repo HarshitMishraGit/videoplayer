@@ -55,6 +55,8 @@ import FloatingMenu from './FloatingMenu';
         }).catch(err => {
             // console.log("err: ", err);
         })
+console.log("video at index :",index ,"is renderer")
+console.log("and playing :",playing)
     }, [])
     
     
@@ -90,15 +92,20 @@ import FloatingMenu from './FloatingMenu';
  <VideoPlayer 
            ref={videoPlayerRef}
             video={{ uri: 'file://' + videopath}}
-            videoWidth={width}
-            videoHeight={height+(heightStatus ?? 0)}
-              pauseOnPress={true}
+            videoWidth={width}    
+            videoHeight={height>width?(height+(heightStatus ?? 0)):height}
+                          pauseOnPress={true}
+                       loop={true}   
               fullScreenOnLongPress={true}
                           resizeMode={videoResizeMode}
-                        //   fullscreen={true}
+                          //   fullscreen={true}
+                          
                           autoplay={playing}
                           onEnd={() => {
-                              videoPlayerRef?.current?.seek(0);
+                            //   videoPlayerRef?.current?.seek(0);
+                            //   setVisibleIndex(index);
+                            //   console.log("visibleIndex :", visible);
+                            //   console.log("video ended");
                           }}
           />
           

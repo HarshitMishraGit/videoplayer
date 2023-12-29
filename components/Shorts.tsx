@@ -18,10 +18,10 @@ import DirectoryPickerComp from './DirectoryPickerComp';
 import storage from '../storage/storage';
 import VideoWrapper from './VideoWrapper';
 import { askForFilesAndMediaPermission } from './permissionsHelper';
+import VideoPlayer from 'react-native-video-player';
 export default function Shorts(props:any) {
     const {videoList,setVideoList,visibleIndex,setVisibleIndex} = props;
     const [dirName, setDirName] = useState<string>('');
-
     useEffect(() => {
       askForFilesAndMediaPermission();
     }, []);
@@ -48,6 +48,7 @@ export default function Shorts(props:any) {
       }
     }, [storage])
     
+
    
     const viewabilityConfig = {
       viewAreaCoveragePercentThreshold: 50,
@@ -73,15 +74,17 @@ export default function Shorts(props:any) {
         contentContainerStyle={{ width: '100%' }}
           renderItem={useCallback(
               ({ item, index }: { item: { path: string }, index: number }) => {
-              return (<VideoWrapper uri={item?.path} setDirName={setDirName} setVideoList={setVideoList} index={ index}  paused={index !== visibleIndex}
+              return (<VideoWrapper uri={item?.path}  setVideoList={setVideoList} index={ index}  
                 layout={layout}
                 playing={index === visibleIndex}
-                visible={index === visibleIndex}/>) 
+                visible={index === visibleIndex}
+               
+              />) 
             },
-            [layout,visibleIndex],
+            [visibleIndex],
                 )}
                 
-          keyExtractor={(item, index) => item.path + index}
+          keyExtractor={(item, index) => item.path + index + (index === visibleIndex ? '-visible' : '')}
           showsVerticalScrollIndicator={false}
           snapToAlignment='start'
           snapToInterval={0}
@@ -89,7 +92,7 @@ export default function Shorts(props:any) {
           viewabilityConfig={viewabilityConfig}
           onViewableItemsChanged={onViewRef.current}
           pagingEnabled
-          windowSize={2}
+          windowSize={3}
           />
       </View>
       </>
