@@ -1,4 +1,4 @@
-import { View, Text,Dimensions,StyleSheet ,TouchableOpacity,LayoutRectangle,Platform,StatusBar} from 'react-native'
+import { View, Text,Dimensions,StyleSheet ,TouchableOpacity,LayoutRectangle,Platform,StatusBar,ActivityIndicator} from 'react-native'
 import React,{useState,useRef,useEffect} from 'react'
 import VideoPlayer from 'react-native-video-player';
 import DirectoryPickerComp from './DirectoryPickerComp';
@@ -16,7 +16,7 @@ import FloatingMenu from './FloatingMenu';
     const videoPlayerRef = useRef<VideoPlayer>(null);
      const VideoWrapperRef = useRef<any>(null);
      const heightStatus = Platform.OS === 'android' ? StatusBar.currentHeight : 0;
-     
+    const [loading, setLoading] = useState(true);
     // console.log("uri",uri)
   const onDoubleTap = (event:any) => {
       if (event.nativeEvent.state === State.ACTIVE) {
@@ -55,8 +55,8 @@ import FloatingMenu from './FloatingMenu';
         }).catch(err => {
             // console.log("err: ", err);
         })
-console.log("video at index :",index ,"is renderer")
-console.log("and playing :",playing)
+// console.log("video at index :",index ,"is renderer")
+// console.log("and playing :",playing)
     }, [])
     
     
@@ -80,7 +80,7 @@ console.log("and playing :",playing)
     
     }
   return (
-    <View style={{ width: width ,height:height+(heightStatus ?? 0)}} ref={VideoWrapperRef}>
+    <View style={{ width: width ,height:height+(heightStatus ?? 0),minWidth:width,minHeight:height+(heightStatus ?? 0)}} ref={VideoWrapperRef} >
           <GestureHandlerRootView style={{ flex: 1 }}>
               <DirectoryPickerComp setVideoList={setVideoList} randomVideo={randomVideo} resizeModeToggler={resizeModeToggler} videoRef={videoPlayerRef} videMovementStep={videMovementStep} setVideMovementStep={setVideMovementStep} setShow={setShow} show={show } />
               <TapGestureHandler
@@ -89,14 +89,23 @@ console.log("and playing :",playing)
               >
                  
                   <View>
- <VideoPlayer 
-           ref={videoPlayerRef}
+                      {loading && <>
+                      
+                          <View style={{flex:1,justifyContent:'center',alignContent:'center',backgroundColor:'#FFF'}}>
+                          <ActivityIndicator size="large" color="#0000ff" />
+                      </View>
+                      </>}
+                      <VideoPlayer 
+                          style={{ width: width, height: height+(heightStatus ?? 0) }}
+                          ref={videoPlayerRef}
+                          onLoadStart={() => setLoading(true)}
+                            onLoad={() => setLoading(false)}
             video={{ uri: 'file://' + videopath}}
             videoWidth={width}    
             videoHeight={height>width?(height+(heightStatus ?? 0)):height}
                           pauseOnPress={true}
                        loop={true}   
-              fullScreenOnLongPress={true}
+                     fullScreenOnLongPress={true}
                           resizeMode={videoResizeMode}
                           //   fullscreen={true}
                           
@@ -131,7 +140,7 @@ console.log("and playing :",playing)
   )
 }
 
-export default VideoWrapper
+export default React.memo(VideoWrapper)
 const styles = StyleSheet.create({
     float: {
         position: 'absolute',

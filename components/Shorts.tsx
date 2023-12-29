@@ -58,7 +58,7 @@ export default function Shorts(props:any) {
       if (viewableItems?.viewableItems?.length > 0) {
         const index = viewableItems?.viewableItems?.[0]?.index;
          setVisibleIndex(index);
-         console.log("index :", index, "visibleIndex :", visibleIndex);
+         console.log("index :", index );
       }
     });
   
@@ -73,7 +73,8 @@ export default function Shorts(props:any) {
           data={Array.from(videoList, (path: string) => ({ path }))}
         contentContainerStyle={{ width: '100%' }}
           renderItem={useCallback(
-              ({ item, index }: { item: { path: string }, index: number }) => {
+            ({ item, index }: { item: { path: string }, index: number }) => {
+              // if(index >= visibleIndex+3) return null;
               return (<VideoWrapper uri={item?.path}  setVideoList={setVideoList} index={ index}  
                 layout={layout}
                 playing={index === visibleIndex}
@@ -81,10 +82,10 @@ export default function Shorts(props:any) {
                
               />) 
             },
-            [visibleIndex],
+            [layout,visibleIndex],
                 )}
                 
-          keyExtractor={(item, index) => item.path + index + (index === visibleIndex ? '-visible' : '')}
+          keyExtractor={(item, index) =>index.toString() + (index === visibleIndex ? '-visible' : '')}
           showsVerticalScrollIndicator={false}
           snapToAlignment='start'
           snapToInterval={0}
@@ -93,6 +94,7 @@ export default function Shorts(props:any) {
           onViewableItemsChanged={onViewRef.current}
           pagingEnabled
           windowSize={3}
+          maxToRenderPerBatch={1}
           />
       </View>
       </>
