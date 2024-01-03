@@ -33,7 +33,7 @@ import FloatingMenu from './FloatingMenu';
               
               videoPlayerRef?.current?.seek(currentTime + videMovementStep); // Seek 10 seconds backward
         }
-    // videoPlayerRef?.current?.seek(videoPlayerRef?.current?.state.currentTime + 10); // Seek 10 seconds forward
+  
     }
     };
   const prevVideo = (event:any) => {
@@ -43,7 +43,7 @@ import FloatingMenu from './FloatingMenu';
         const currentTime = (duration ?? 0) * (progress ?? 0);
           console.log(currentTime);
         videoPlayerRef?.current?.seek(currentTime + 10); // Seek 10 seconds backward
-    // videoPlayerRef?.current?.seek(videoPlayerRef?.current?.state.currentTime + 10); // Seek 10 seconds forward
+   
     }
     };
     useEffect(() => {
@@ -55,8 +55,7 @@ import FloatingMenu from './FloatingMenu';
         }).catch(err => {
             // console.log("err: ", err);
         })
-// console.log("video at index :",index ,"is renderer")
-// console.log("and playing :",playing)
+
     }, [])
     
     
@@ -111,10 +110,7 @@ import FloatingMenu from './FloatingMenu';
                           
                           autoplay={playing}
                           onEnd={() => {
-                            //   videoPlayerRef?.current?.seek(0);
-                            //   setVisibleIndex(index);
-                            //   console.log("visibleIndex :", visible);
-                            //   console.log("video ended");
+                            
                           }}
           />
           
