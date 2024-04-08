@@ -8,6 +8,7 @@ import FloatingMenu from './FloatingMenu';
 import RNRestart from 'react-native-restart'; 
 export default function DirectoryPickerComp(props:any) {
     const { setVideoList ,randomVideo ,resizeModeToggler ,show,videoPlayerRef, videMovementStep, setVideMovementStep,setShow } = props;
+    const SUPPORTED_VIDEO_EXTENSIONS = ['mp4', 'avi', 'mov', 'mkv', 'ts','webm','mpeg'];
   const [dir, setdir] = useState<string>('');
     storage.load({
         key: 'dirName',
@@ -35,7 +36,7 @@ export default function DirectoryPickerComp(props:any) {
     const files = await RNFS.readDir(path);     
     const videoFiles = files.filter(file => {
       const fileExtension = file.name.split('.').pop();
-      return ['mp4', 'avi', 'mov', 'mkv','ts'].includes(fileExtension ?? '');
+      return SUPPORTED_VIDEO_EXTENSIONS.includes(fileExtension ?? '');
       });
       setVideoList(videoFiles);
         // save it inside storage
