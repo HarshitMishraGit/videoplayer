@@ -56,6 +56,15 @@ import FloatingMenu from './FloatingMenu';
             // console.log("err: ", err);
         })
 
+        storage.load({
+            key: 'floatingMenuPosition',
+        }).then(res => {
+            // console.log("res: ", res);
+            setShow(res)
+        }).catch(err => {
+            // console.log("err: ", err);
+        })
+
     }, [])
     
     
@@ -172,6 +181,6 @@ const styles = StyleSheet.create({
           alignItems: 'center',
         justifyContent: 'center',
         zIndex: 10,
-        opacity:0.5
+        // opacity:0.5
     }
 })

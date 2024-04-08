@@ -1,7 +1,6 @@
 import { View, Text ,StyleSheet, Button,TouchableOpacity} from 'react-native'
 import React, { useEffect, useState } from 'react'
 import DocumentPicker from 'react-native-document-picker';  
-import RNFetchBlob from 'rn-fetch-blob';
 import storage from '../storage/storage';
 import * as RNFS from 'react-native-fs';
 import FloatingMenu from './FloatingMenu';
@@ -128,7 +127,6 @@ const styles = StyleSheet.create({
       right: 10,
      borderRadius: 5,
     zIndex: 10,
-    opacity: 0.5,
     paddingTop: 20,
   },
   resize: {
@@ -138,7 +136,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
  
     zIndex: 10,
-    opacity:0.5
 }
   
 })

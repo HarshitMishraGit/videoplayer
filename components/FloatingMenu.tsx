@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import React, { useState } from 'react';
+import storage from '../storage/storage';
 
 export default function FloatingMenu(props: any) {
   const { videoRef,videMovementStep,setVideMovementStep,setShow,show } = props;
@@ -19,6 +20,11 @@ export default function FloatingMenu(props: any) {
   const handleShow = () => {
     //  make loop true
     setShow((e: boolean) => !e);
+
+    storage.save({
+      key:"floatingMenuPosition",
+      data: !show
+    })
   }
   return (<>
       <TouchableOpacity onPress={toggleMenu} >
