@@ -46,6 +46,14 @@ export default function DirectoryPickerComp(props:any) {
           console.log("videoList saved successfully");
           RNRestart.restart();
         })
+
+        // save it inside storage for random video
+        storage.save({
+          key: 'randomVideoList',
+          data: videoFiles
+        }).then(()=>{
+          console.log("random video list saved successfully");
+        })
       console.log("Directory changed ");
   }
 const handleDirectory = async () => {

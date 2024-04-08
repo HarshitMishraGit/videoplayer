@@ -10,7 +10,7 @@ import FloatingMenu from './FloatingMenu';
     const { width, height } = Dimensions.get('window');
     const [videopath, setvideopath] = useState<string>(uri.path);
     const [videoName, setVideoName] = useState(uri.name)
-     const [videMovementStep, setVideMovementStep] = useState(5)
+     const [videMovementStep, setVideMovementStep] = useState(5);
      const [show, setShow] = useState(false)
     const [videoResizeMode, setVideoResizeMode] = useState<'contain' | 'cover'>('contain');
     const videoPlayerRef = useRef<VideoPlayer>(null);
@@ -70,14 +70,28 @@ import FloatingMenu from './FloatingMenu';
       
     const randomVideo = async () => {
         const videoList = await storage.load({
-            key: 'videoList',
+            key: 'randomVideoList',
         });
+        if(videoList.length === 0){
+            const allVideoList = await storage.load({
+                key: 'videoList',
+            });
+            storage.save({
+                key: 'randomVideoList',
+                data: allVideoList,
+            })
+        }
         const randomVideo = videoList[Math.floor(Math.random() * videoList.length)];
         setvideopath(randomVideo.path);
         setVideoName(randomVideo.name);
-        // also while changing the video shuffle the videoList
-    
+        // remove the video from the list
+        const updatedVideoList = videoList.filter((video: any) => video.path !== randomVideo.path);
+        storage.save({
+            key: 'randomVideoList',
+            data: updatedVideoList,
+        })
     }
+
   return (
     <View style={{ width: width ,height:height+(heightStatus ?? 0),minWidth:width,minHeight:height+(heightStatus ?? 0)}} ref={VideoWrapperRef} >
           <GestureHandlerRootView style={{ flex: 1 }}>
