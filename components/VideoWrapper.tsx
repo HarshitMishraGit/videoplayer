@@ -15,7 +15,7 @@ import FloatingMenu from './FloatingMenu';
     const [videoResizeMode, setVideoResizeMode] = useState<'contain' | 'cover'>('contain');
     const videoPlayerRef = useRef<VideoPlayer>(null);
      const VideoWrapperRef = useRef<any>(null);
-     const heightStatus = Platform.OS === 'android' ? StatusBar.currentHeight : 0;
+     const heightStatus = width< height ? StatusBar.currentHeight : 0;
     const [loading, setLoading] = useState(true);
     // console.log("uri",uri)
   const onDoubleTap = (event:any) => {
